@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.viewbinding.ViewBinding
 import com.allenlucas.basiclib.lifecycle.ClickUtils
 
@@ -17,16 +19,19 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
 
     abstract fun initView(savedInstanceState: Bundle?)
 
-    protected fun initObserve() {
+    // 初始化观察者
+    protected open fun initObserve() {
     }
 
-    protected fun initListener() {
+    //初始化监听
+    protected open fun initListener() {
     }
 
-    protected fun release() {
+    //释放资源
+    protected open fun release() {
     }
 
-    protected fun viewClick(view: View, click: () -> Unit) {
+    private fun viewClick(view: View, click: (View) -> Unit) {
         clickUtils.click(view, click)
     }
 
@@ -43,10 +48,17 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         clickUtils.addObserve(this)
         initView(savedInstanceState)
+        initListener()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         release()
     }
+
+    fun View.onClick(click: (View) -> Unit) {
+        viewClick(this, click)
+    }
+
+    fun View.navigationController() = Navigation.findNavController(this)
 }

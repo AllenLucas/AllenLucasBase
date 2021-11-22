@@ -2,7 +2,10 @@ package com.allenlucas.basiclib.base
 
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.viewbinding.ViewBinding
 import com.allenlucas.basiclib.lifecycle.ClickUtils
 
@@ -34,7 +37,7 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
     /**
      * 点击事件
      */
-    protected fun viewClick(view: View, click: () -> Unit) {
+    private fun viewClick(view: View, click: (View) -> Unit) {
         clickUtils.click(view, click)
     }
 
@@ -70,5 +73,21 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         release()
+    }
+
+    fun View.onClick(click: (View) -> Unit) {
+        viewClick(this, click)
+    }
+
+    fun navigationController(@IdRes id: Int): NavController {
+        val navHostFragment = supportFragmentManager.findFragmentById(id)
+        if (navHostFragment is NavHostFragment) {
+            return navHostFragment.navController
+        }
+        throw IllegalArgumentException("该id无法找到正确的navHostFragment")
+    }
+
+    fun navigationFragment(@IdRes hostId: Int, @IdRes actionId: Int) {
+        navigationController(hostId).navigate(actionId)
     }
 }

@@ -32,8 +32,8 @@ class ClickUtils : LifecycleObserver {
         mOwner = null
     }
 
-    fun click(view: View, click: () -> Unit) {
-        view.clickFlow().throttleFirst(time).onEach { click.invoke() }.launchIn(mainScope)
+    fun click(view: View, click: (View) -> Unit) {
+        view.clickFlow().throttleFirst(time).onEach { click.invoke(view) }.launchIn(mainScope)
     }
 
     private fun <T> Flow<T>.throttleFirst(thresholdMillis: Long): Flow<T> = flow {

@@ -1,10 +1,10 @@
 package com.allenlucas.base
 
 import android.os.Bundle
+import com.allenlucas.base.base.MainFragment
 import com.allenlucas.base.databinding.ActivityMainBinding
 import com.allenlucas.basiclib.base.BaseActivity
 import com.allenlucas.basiclib.utils.BackFinishUtils
-import com.allenlucas.basiclib.utils.toast
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
 
@@ -13,17 +13,28 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     override fun getViewBinding() = ActivityMainBinding.inflate(layoutInflater)
 
     override fun initView(savedInstanceState: Bundle?) {
-        mBinding.tvContent.text = "initView"
+        val mainFragment = MainFragment()
+//        mBinding.tvContent.text = "initView"
     }
 
     override fun initListener() {
-        viewClick(mBinding.tvContent) { toast("显示${System.currentTimeMillis()}") }
+        mBinding.btnStart.onClick {
+            navigationFragment(R.id.nav_host_fragment, R.id.action_mainFragment_to_secondFragment)
+        }
+//        mBinding.tvContent.onClick { toast("显示${System.currentTimeMillis()}") }
     }
 
     override fun initData() {
     }
 
     override fun onBackPressed() {
-        backUtils.onBackPress()
+        onBackPressedDispatcher.onBackPressed()
+//        val nav = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+//        if (nav is MainFragment) {
+//            backUtils.onBackPress()
+//        } else {
+//            super.onBackPressed()
+//        }
     }
+
 }
