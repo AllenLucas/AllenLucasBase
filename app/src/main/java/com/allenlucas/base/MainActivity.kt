@@ -1,14 +1,16 @@
 package com.allenlucas.base
 
 import android.os.Bundle
+import android.util.Log
+import androidx.activity.viewModels
 import com.allenlucas.base.base.MainFragment
 import com.allenlucas.base.databinding.ActivityMainBinding
+import com.allenlucas.base.viewModel.BannerViewModel
 import com.allenlucas.basiclib.base.BaseActivity
-import com.allenlucas.basiclib.utils.BackFinishUtils
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
 
-    private val backUtils by lazy { BackFinishUtils(this) }
+    val viewModel by viewModels<BannerViewModel>()
 
     override fun getViewBinding() = ActivityMainBinding.inflate(layoutInflater)
 
@@ -17,9 +19,18 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 //        mBinding.tvContent.text = "initView"
     }
 
+    override fun initObserve() {
+        super.initObserve()
+        viewModel.mBannerLiveData.observe(this){
+            it.forEach {
+                Log.e("lal","result:${it.title}")
+            }
+        }
+    }
+
     override fun initListener() {
         mBinding.btnStart.onClick {
-            navigationFragment(R.id.nav_host_fragment, R.id.action_mainFragment_to_secondFragment)
+            viewModel.getBanner()
         }
 //        mBinding.tvContent.onClick { toast("显示${System.currentTimeMillis()}") }
     }
@@ -29,12 +40,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     override fun onBackPressed() {
         onBackPressedDispatcher.onBackPressed()
-//        val nav = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
-//        if (nav is MainFragment) {
-//            backUtils.onBackPress()
-//        } else {
-//            super.onBackPressed()
-//        }
     }
 
 }
