@@ -19,7 +19,7 @@ class BackFinishUtils(activity: Activity) {
         if (new - old < 2000) {
             mWeakReference.get()?.finish()
         } else {
-            mWeakReference.get()?.toast("再按返回键退出")
+            ToastUtil.show("再按返回键退出")
         }
     }
 
